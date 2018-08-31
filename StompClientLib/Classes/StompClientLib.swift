@@ -101,7 +101,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         openSocket()
     }
     
-    public func openSocketWithURLRequest(request: NSURLRequest, delegate: StompClientLibDelegate, connectionHeaders: [String: String]?) {
+    public func openSocketWithURLRequestAndHeader(request: NSURLRequest, delegate: StompClientLibDelegate, connectionHeaders: [String: String]?) {
         self.connectionHeaders = connectionHeaders
         openSocketWithURLRequest(request: request, delegate: delegate)
         self.connection = true
