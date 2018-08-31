@@ -94,6 +94,12 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         }
     }
     
+    public func openSocketWithURLRequestNoDel(request: NSURLRequest) {
+        self.urlRequest = request
+        // Opening the socket
+        openSocket()
+    }
+    
     public func openSocketWithURLRequest(request: NSURLRequest, delegate: StompClientLibDelegate) {
         self.delegate = delegate
         self.urlRequest = request
@@ -107,7 +113,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         self.connection = true
     }
     
-    private func openSocket() {
+    public func openSocket() {
         if socket == nil || socket?.readyState == .CLOSED {
             if certificateCheckEnabled == true {
                 self.socket = SRWebSocket(urlRequest: urlRequest! as URLRequest)
