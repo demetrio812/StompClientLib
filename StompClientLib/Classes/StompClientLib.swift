@@ -94,7 +94,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         }
     }
     
-    public func openSocketWithURLRequestNoDel(request: NSURLRequest) {
+    public func openSocketWithURLRequestNoDel(_: NSURLRequest) {
         self.urlRequest = request
         // Opening the socket
         openSocket()
