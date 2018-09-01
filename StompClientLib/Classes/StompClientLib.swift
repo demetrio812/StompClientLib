@@ -430,4 +430,11 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         headerToSend[StompCommands.commandDisconnect] = String(Int(NSDate().timeIntervalSince1970))
         sendFrame(command: StompCommands.commandDisconnect, header: headerToSend, body: nil)
     }
+   
+    public func disconnectBis() {
+        connection = false
+        var headerToSend = [String: String]()
+        headerToSend[StompCommands.commandDisconnect] = String(Int(NSDate().timeIntervalSince1970))
+        sendFrame(command: StompCommands.commandDisconnect, header: headerToSend, body: nil)
+    }
 }
