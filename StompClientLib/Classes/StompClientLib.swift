@@ -68,6 +68,7 @@ public protocol StompClientLibDelegate {
     func serverDidSendPing()
 }
 
+@objc(StompClientLib)
 public class StompClientLib: NSObject, SRWebSocketDelegate {
     var socket: SRWebSocket?
     var sessionId: String?
@@ -82,6 +83,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         set { socket?.requestCookies = newValue }
     }
     
+    @objc
     public func sendJSONForDict(dict: AnyObject, toDestination destination: String) {
         do {
             let theJSONData = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions())
@@ -94,12 +96,14 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         }
     }
     
+    @objc
     public func openSocketWithURLRequestNoDel(_: NSURLRequest) {
         self.urlRequest = request
         // Opening the socket
         openSocket()
     }
     
+    @objc
     public func openSocketWithURLRequest(request: NSURLRequest, delegate: StompClientLibDelegate) {
         self.delegate = delegate
         self.urlRequest = request
@@ -107,12 +111,14 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         openSocket()
     }
     
+    @objc
     public func openSocketWithURLRequestAndHeader(request: NSURLRequest, delegate: StompClientLibDelegate, connectionHeaders: [String: String]?) {
         self.connectionHeaders = connectionHeaders
         openSocketWithURLRequest(request: request, delegate: delegate)
         self.connection = true
     }
     
+    @objc
     public func openSocket() {
         if socket == nil || socket?.readyState == .CLOSED {
             if certificateCheckEnabled == true {
@@ -330,6 +336,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         }
     }
     
+    @objc
     public func sendMessage(message: String, toDestination destination: String, withHeaders headers: [String: String]?, withReceipt receipt: String?) {
         var headersToSend = [String: String]()
         if let headers = headers {
@@ -355,15 +362,18 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         sendFrame(command: StompCommands.commandSend, header: headersToSend, body: message as AnyObject)
     }
     
+    @objc
     public func isConnected() -> Bool{
         return connection
     }
     
+    @objc
     public func subscribe(destination: String) {
         connection = true
         subscribeToDestination(destination: destination, ackMode: .AutoMode)
     }
     
+    @objc
     public func subscribeToDestination(destination: String, ackMode: StompAckMode) {
         var ack = ""
         switch ackMode {
@@ -380,12 +390,14 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         self.sendFrame(command: StompCommands.commandSubscribe, header: headers, body: nil)
     }
     
+    @objc
     public func subscribeWithHeader(destination: String, withHeader header: [String: String]) {
         var headerToSend = header
         headerToSend[StompCommands.commandHeaderDestination] = destination
         sendFrame(command: StompCommands.commandSubscribe, header: headerToSend, body: nil)
     }
     
+    @objc
     public func unsubscribe(destination: String) {
         connection = false
         var headerToSend = [String: String]()
@@ -424,6 +436,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         sendFrame(command: StompCommands.commandAck, header: headerToSend, body: nil)
     }
     
+    @objc
     public func disconnect() {
         connection = false
         var headerToSend = [String: String]()
