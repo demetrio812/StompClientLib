@@ -57,6 +57,7 @@ public enum StompAckMode {
 }
 
 // Fundamental Protocols
+@objc
 public protocol StompClientLibDelegate {
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, withHeader header:[String:String]?, withDestination destination: String)
     
@@ -67,6 +68,7 @@ public protocol StompClientLibDelegate {
     func serverDidSendPing()
 }
 
+@objcMembers
 public class StompClientLib: NSObject, SRWebSocketDelegate {
     var socket: SRWebSocket?
     var sessionId: String?

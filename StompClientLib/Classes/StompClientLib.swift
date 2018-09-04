@@ -60,7 +60,6 @@ public enum StompAckMode {
 @objc
 public protocol StompClientLibDelegate {
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, withHeader header:[String:String]?, withDestination destination: String)
-    func stompClientJSONBody(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: String?, withHeader header:[String:String]?, withDestination destination: String)
     
     func stompClientDidDisconnect(client: StompClientLib!)
     func stompClientDidConnect(client: StompClientLib!)
@@ -78,12 +77,6 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
     public var connection: Bool = false
     public var certificateCheckEnabled = true
     private var urlRequest: NSURLRequest?
-    // Cookie Request Getter and Setter
-    public var requestCookies: [Any]? {
-        get { return socket?.requestCookies }
-        set { socket?.requestCookies = newValue }
-    }
-    
     
     public func sendJSONForDict(dict: AnyObject, toDestination destination: String) {
         do {
@@ -97,14 +90,6 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         }
     }
     
-    
-    public func openSocketWithURLRequestNoDel(request: NSURLRequest) {
-        self.urlRequest = request
-        // Opening the socket
-        openSocket()
-    }
-    
-    @objc
     public func openSocketWithURLRequest(request: NSURLRequest, delegate: StompClientLibDelegate) {
         self.delegate = delegate
         self.urlRequest = request
@@ -112,15 +97,13 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         openSocket()
     }
     
-    
-    public func openSocketWithURLRequestAndHeader(request: NSURLRequest, delegate: StompClientLibDelegate, connectionHeaders: [String: String]?) {
+    public func openSocketWithURLRequest(request: NSURLRequest, delegate: StompClientLibDelegate, connectionHeaders: [String: String]?) {
         self.connectionHeaders = connectionHeaders
         openSocketWithURLRequest(request: request, delegate: delegate)
         self.connection = true
     }
     
-    @objc
-    public func openSocket() {
+    private func openSocket() {
         if socket == nil || socket?.readyState == .CLOSED {
             if certificateCheckEnabled == true {
                 self.socket = SRWebSocket(urlRequest: urlRequest! as URLRequest)
@@ -199,7 +182,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         
         if let delegate = delegate {
             DispatchQueue.main.async(execute: {
-                delegate.serverDidSendError(client: self, withErrorMessage: error!.localizedDescription, detailedErrorMessage: error!.localizedDescription)
+                delegate.serverDidSendError(client: self, withErrorMessage: error.localizedDescription, detailedErrorMessage: error as? String)
             })
         }
     }
@@ -301,10 +284,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
             // Response
             if let delegate = delegate {
                 DispatchQueue.main.async(execute: {
-                     delegate.stompClient(client: self, didReceiveMessageWithJSONBody: self.dictForJSONString(jsonStr: body),
-                                          withHeader: headers, withDestination: self.destinationFromHeader(header: headers))
-                    // Send as a String JSON Body
-                     delegate.stompClientJSONBody(client: self, didReceiveMessageWithJSONBody: body, withHeader: headers, withDestination: self.destinationFromHeader(header: headers))
+                    delegate.stompClient(client: self, didReceiveMessageWithJSONBody: self.dictForJSONString(jsonStr: body), withHeader: headers, withDestination: self.destinationFromHeader(header: headers))
                 })
             }
         } else if command == StompCommands.responseFrameReceipt {   //
@@ -337,7 +317,6 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         }
     }
     
-    
     public func sendMessage(message: String, toDestination destination: String, withHeaders headers: [String: String]?, withReceipt receipt: String?) {
         var headersToSend = [String: String]()
         if let headers = headers {
@@ -363,17 +342,14 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         sendFrame(command: StompCommands.commandSend, header: headersToSend, body: message as AnyObject)
     }
     
-    
     public func isConnected() -> Bool{
         return connection
     }
-    
     
     public func subscribe(destination: String) {
         connection = true
         subscribeToDestination(destination: destination, ackMode: .AutoMode)
     }
-    
     
     public func subscribeToDestination(destination: String, ackMode: StompAckMode) {
         var ack = ""
@@ -391,13 +367,11 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         self.sendFrame(command: StompCommands.commandSubscribe, header: headers, body: nil)
     }
     
-    
     public func subscribeWithHeader(destination: String, withHeader header: [String: String]) {
         var headerToSend = header
         headerToSend[StompCommands.commandHeaderDestination] = destination
         sendFrame(command: StompCommands.commandSubscribe, header: headerToSend, body: nil)
     }
-    
     
     public func unsubscribe(destination: String) {
         connection = false
@@ -437,15 +411,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         sendFrame(command: StompCommands.commandAck, header: headerToSend, body: nil)
     }
     
-    @objc
     public func disconnect() {
-        connection = false
-        var headerToSend = [String: String]()
-        headerToSend[StompCommands.commandDisconnect] = String(Int(NSDate().timeIntervalSince1970))
-        sendFrame(command: StompCommands.commandDisconnect, header: headerToSend, body: nil)
-    }
-   
-    public func disconnectBis() {
         connection = false
         var headerToSend = [String: String]()
         headerToSend[StompCommands.commandDisconnect] = String(Int(NSDate().timeIntervalSince1970))
