@@ -15,17 +15,23 @@ class ViewController: UIViewController, StompClientLibDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    @IBAction func connectClicked(_ sender: Any) {
         // Connection with socket
         registerSocket()
     }
-    
+    @IBAction func disconnectClicked(_ sender: Any) {
+        socketClient.unsubscribe(destination: "/topic/greetings")
+        socketClient.disconnect()
+    }
     func registerSocket(){
-        let baseURL = "http://your-url-is-here/"
+//        let baseURL = "ws://192.168.1.199:8983/ws"
         // Cut the first 7 character which are "http://" Not necessary!!!
         // substring is depracated in iOS 11, use prefix instead :)
         // let wsURL = baseURL.substring(from:baseURL.index(baseURL.startIndex, offsetBy: 7))
-        let wsURL = baseURL.prefix(7)
-        let completedWSURL = "ws://\(wsURL)gateway/websocket"
+//        let wsURL = baseURL.prefix(7)
+        let completedWSURL = "ws://192.168.1.199:8983/ws"
         print("Completed WS URL : \(completedWSURL)")
         let url = NSURL(string: completedWSURL)!
         
@@ -33,7 +39,7 @@ class ViewController: UIViewController, StompClientLibDelegate {
     }
     
     func stompClientDidConnect(client: StompClientLib!) {
-        let topic = "/topic/your topic is here/"
+        let topic = "/topic/greetings"
         print("Socket is Connected : \(topic)")
         socketClient.subscribe(destination: topic)
     }
@@ -46,14 +52,9 @@ class ViewController: UIViewController, StompClientLibDelegate {
         
     }
     
-    func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, withHeader header: [String : String]?, withDestination destination: String) {
-        print("DESTIONATION : \(destination)")
-        print("JSON BODY : \(String(describing: jsonBody))")
-    }
-    
-    func stompClientJSONBody(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
-        print("DESTIONATION : \(destination)")
-        print("String JSON BODY : \(String(describing: jsonBody))")
+    func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
+        print("DESTINATION : \(destination)")
+        print("JSON BODY : \(jsonBody)")
     }
     
     func serverDidSendReceipt(client: StompClientLib!, withReceiptId receiptId: String) {
