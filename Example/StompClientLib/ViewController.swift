@@ -12,36 +12,37 @@ import StompClientLib
 class ViewController: UIViewController, StompClientLibDelegate {
     
     var socketClient = StompClientLib()
-
+    let topic = "/topic/greetings"
+    var url = NSURL()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    @IBAction func connectClicked(_ sender: Any) {
         // Connection with socket
         registerSocket()
     }
-    @IBAction func disconnectClicked(_ sender: Any) {
-        socketClient.unsubscribe(destination: "/topic/greetings")
-        socketClient.disconnect()
+    
+    @IBAction func btnPressed(_ sender: Any) {
+        socketClient.sendMessage(message: "StompClientLib Foo", toDestination: "/app/hello", withHeaders: nil, withReceipt: nil)
     }
     func registerSocket(){
-//        let baseURL = "ws://192.168.1.199:8983/ws"
+        let baseURL = "http://localhost:8080/"
         // Cut the first 7 character which are "http://" Not necessary!!!
         // substring is depracated in iOS 11, use prefix instead :)
-        // let wsURL = baseURL.substring(from:baseURL.index(baseURL.startIndex, offsetBy: 7))
-//        let wsURL = baseURL.prefix(7)
-        let completedWSURL = "ws://192.168.1.199:8983/ws"
+        let wsURL = baseURL.substring(from:baseURL.index(baseURL.startIndex, offsetBy: 7))
+        let completedWSURL = "ws://\(wsURL)hello/websocket"
         print("Completed WS URL : \(completedWSURL)")
-        let url = NSURL(string: completedWSURL)!
-        
+        url = NSURL(string: completedWSURL)!
         socketClient.openSocketWithURLRequest(request: NSURLRequest(url: url as URL) , delegate: self as StompClientLibDelegate)
     }
     
     func stompClientDidConnect(client: StompClientLib!) {
-        let topic = "/topic/greetings"
+        let topic = self.topic
         print("Socket is Connected : \(topic)")
         socketClient.subscribe(destination: topic)
+        // Auto Disconnect after 3 sec
+        socketClient.autoDisconnect(time: 5)
+        // Reconnect after 4 sec
+        socketClient.reconnect(request: NSURLRequest(url: url as URL) , delegate: self as StompClientLibDelegate, time: 4.0)
     }
     
     func stompClientDidDisconnect(client: StompClientLib!) {
@@ -49,12 +50,13 @@ class ViewController: UIViewController, StompClientLibDelegate {
     }
     
     func stompClientWillDisconnect(client: StompClientLib!, withError error: NSError) {
+        print("Socket will is Disconnected")
         
     }
     
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
-        print("DESTINATION : \(destination)")
-        print("JSON BODY : \(jsonBody)")
+        print("DESTIONATION : \(destination)")
+        print("JSON BODY : \(String(describing: jsonBody))")
     }
     
     func serverDidSendReceipt(client: StompClientLib!, withReceiptId receiptId: String) {
@@ -68,5 +70,5 @@ class ViewController: UIViewController, StompClientLibDelegate {
     func serverDidSendPing() {
         print("Server Ping")
     }
-
+    
 }

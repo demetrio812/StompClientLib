@@ -26,16 +26,8 @@ alt="Downloads">
 
 
 <p align="center">
-<a href="https://github.com/WrathChaos/StompClientLib">
-<img src="http://img.shields.io/travis/wrathchaos/StompClientLib.svg"
-alt="Build">
-</a>
-<a href="https://github.com/WrathChaos/StompClientLib">
-<img src="https://img.shields.io/github/issues/WrathChaos/StompClientLib.svg"
-alt="Issues">
-</a>
 <a href="https://github.com/WrathChaos/MJPEGStreamLib">
-<img src="https://img.shields.io/badge/Swift-4.0-orange.svg"
+<img src="https://img.shields.io/badge/Swift-4.2-orange.svg"
 alt="Swift 4.0">
 <img src="https://img.shields.io/badge/Swift-3.0-blue.svg"
 alt="Swift 3.0">
@@ -43,6 +35,10 @@ alt="Swift 3.0">
 <a href="https://github.com/WrathChaos/StompClientLib">
 <img src="https://img.shields.io/cocoapods/v/StompClientLib.svg"
 alt="Pod Version">
+</a>
+<a href="https://github.com/WrathChaos/StompClientLib">
+<img src="https://img.shields.io/github/issues/WrathChaos/StompClientLib.svg"
+alt="Issues">
 </a>
 </p>
 
@@ -61,9 +57,10 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 ## Requirements
 - iOS 8.0+
 - XCode 8.1, 8.2, 8.3
-- **XCode 9.0 +**
+- XCode 9.0+
+- **XCode 10.0 +**
 - Swift 3.0, 3.1, 3.2
-- **Swift 4.0+**
+- **Swift 4.0, Swift 4.1, Swift 4.2**
 
 
 ## Installation
@@ -201,6 +198,22 @@ socketClient?.subscribeWithHeader(destination: destination, withHeader: header)
 socketClient?.unsubscribe(destination: subsId)
 ```
 
+## Auto Reconnect with a given time
+You can use this feature if you need to auto reconnect with a  spesific time or it will just try to reconnect every second. 
+
+```ruby
+// Reconnect after 4 sec
+socketClient.reconnect(request: NSURLRequest(url: url as URL) , delegate: self as StompClientLibDelegate, time: 4.0)
+```
+
+## Auto Disconnect with a given time
+
+```ruby
+// Auto Disconnect after 3 sec
+socketClient.autoDisconnect(time: 3)
+```
+
+
 ## Future Enhancements
 
 - [x] <del>Complete a working Example<del>
@@ -210,6 +223,101 @@ socketClient?.unsubscribe(destination: subsId)
 - [x] <del>Swift 4 compatibility and tests<del>
 - [ ] [ Add Quick Testing ](https://github.com/Quick/Quick)
 - [ ] Re-write websocket full swift version instead of Facebook's SocketRocket lib
+
+# Change Log
+>
+> ## [1.2.7](https://github.com/wrathchaos/StompClientLib/tree/1.2.7) (2018-10-23)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.2.6...1.2.7)
+> 
+> ## [1.2.6](https://github.com/wrathchaos/StompClientLib/tree/1.2.6) (2018-10-23)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.2.5...1.2.6)
+> 
+> **Fixed bugs:**
+>
+> - Error when connected to socket [\#23](https://github.com/WrathChaos/StompClientLib/issues/23)
+>
+> **Closed issues:**
+>
+> - Auto disconnects [\#11](https://github.com/WrathChaos/StompClientLib/issues/11)
+> 
+> ## [1.2.5](https://github.com/wrathchaos/StompClientLib/tree/1.2.5) (2018-10-22)
+> [ Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.2.4...1.2.5)
+> 
+> **Closed issues:**
+> 
+> - Value for "message-id" is always "1" [\#22](https://github.com/WrathChaos/StompClientLib/issues/22)
+> - Multiple subscription to topics [\#20](https://github.com/WrathChaos/StompClientLib/issues/20)
+> - I think there is a memory leak for the delegate [\#19](https://github.com/WrathChaos/StompClientLib/issues/19)
+> - Getting error when framwork is installed in Objective c project [\#9](https://github.com/WrathChaos/StompClientLib/issues/9)
+> 
+> 
+>  ## [1.2.4](https://github.com/wrathchaos/StompClientLib/tree/1.2.4) (2018-10-17)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.2.3...1.2.4)
+> 
+> **Closed issues:**
+> 
+> - didCloseWithCode 1000, reason: nil [\#21](https://github.com/WrathChaos/StompClientLib/issues/21)
+> 
+> ## [1.2.3](https://github.com/wrathchaos/StompClientLib/tree/1.2.3) (2018-10-17)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.2.2...1.2.3)
+> 
+> **Implemented enhancements:**
+> 
+> - How to receive heartbeat? [\#18](https://github.com/WrathChaos/StompClientLib/issues/18)
+> 
+> **Closed issues:**
+> 
+> - Socket is not getting connected [\#30](https://github.com/WrathChaos/StompClientLib/issues/30)
+> - didCloseWithCode 1002 [\#29](https://github.com/WrathChaos/StompClientLib/issues/29)
+> - No response [\#27](https://github.com/WrathChaos/StompClientLib/issues/27)
+> - didCloseWithCode 1001, reason: "Stream end encountered" [\#26](https://github.com/WrathChaos/StompClientLib/issues/26)
+> - Stream end encountered [\#17](https://github.com/WrathChaos/StompClientLib/issues/17)
+> - unsubscribe socketclient [\#14](https://github.com/WrathChaos/StompClientLib/issues/14)
+> - It not able to connect web socket. [\#13](https://github.com/WrathChaos/StompClientLib/issues/13)
+> - One of the delegate method is not being called. [\#12](https://github.com/WrathChaos/StompClientLib/issues/12)
+> - StompClient Disconnection. [\#10](https://github.com/WrathChaos/StompClientLib/issues/10)
+> - Unable to find a specification for 'StompClientLib' [\#8](https://github.com/WrathChaos/StompClientLib/issues/8)
+> 
+> ## [1.2.2](https://github.com/wrathchaos/StompClientLib/tree/1.2.2) (2017-11-03)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.2.1...1.2.2)
+> 
+> ## [1.2.1](https://github.com/wrathchaos/StompClientLib/tree/1.2.1) (2017-10-31)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.2.0...1.2.1)
+> 
+> ## [1.2.0](https://github.com/wrathchaos/StompClientLib/tree/1.2.0) (2017-10-29)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.1.7...1.2.0)
+> 
+> **Closed issues:**
+> 
+> - Let client decide what to do with stomp frame body [\#4](https://github.com/WrathChaos/StompClientLib/issues/4)
+> - Send message support [\#3](https://github.com/WrathChaos/StompClientLib/issues/3)
+> - Error when calling delegate [\#1](https://github.com/WrathChaos/StompClientLib/issues/1)
+> 
+> ## [1.1.7](https://github.com/wrathchaos/StompClientLib/tree/1.1.7) (2017-10-02)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/1.1.6...1.1.7)
+> 
+> ## [1.1.6](https://github.com/wrathchaos/StompClientLib/tree/1.1.6) (2017-08-08)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/0.1.5...1.1.6)
+> 
+> ## [0.1.5](https://github.com/wrathchaos/StompClientLib/tree/0.1.5) (2017-07-10)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/0.1.4...0.1.5)
+> 
+> ## [0.1.4](https://github.com/wrathchaos/StompClientLib/tree/0.1.4) (2017-07-10)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/0.1.3...0.1.4)
+> 
+> ## [0.1.3](https://github.com/wrathchaos/StompClientLib/tree/0.1.3) (2017-07-10)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/0.1.2...0.1.3)
+> 
+> ## [0.1.2](https://github.com/wrathchaos/StompClientLib/tree/0.1.2) (2017-07-08)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/0.1.1...0.1.2)
+> 
+> ## [0.1.1](https://github.com/wrathchaos/StompClientLib/tree/0.1.1) (2017-07-08)
+> [Full Changelog](https://github.com/wrathchaos/StompClientLib/compare/0.1.0...0.1.1)
+> 
+> ## [0.1.0](https://github.com/wrathchaos/StompClientLib/tree/0.1.0) (2017-07-08)
+
+**[CHANGELOG.md](https://github.com/WrathChaos/StompClientLib/blob/master/CHANGELOG.md)**
+
 
 ## Author
 
