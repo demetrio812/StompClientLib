@@ -136,6 +136,8 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
     private func connect() {
         if socket?.readyState == .OPEN {
             // at the moment only anonymous logins
+            connectionHeaders = [StompCommands.commandHeaderAcceptVersion:"1.1,1.2"]
+
             self.sendFrame(command: StompCommands.commandConnect, header: connectionHeaders, body: nil)
         } else {
             self.openSocket()
